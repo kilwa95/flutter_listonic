@@ -19,11 +19,11 @@ class AddScreen extends StatelessWidget {
         icon: const Icon(Icons.check),
         backgroundColor: Colors.lightBlueAccent,
         onPressed: () {
-          Provider.of<TaskProvider>(context, listen: false).addTask(
-            newTaskTitle:
-                Provider.of<TaskProvider>(context, listen: false).taskTitle,
-            newTaskDesc: Provider.of<TaskProvider>(context, listen: false)
-                .taskDescription,
+          final TaskProvider taskProvider = context.read<TaskProvider>();
+          // final TaskProvider taskProvider = context.watch<TaskProvider>();
+          taskProvider.addTask(
+            newTaskTitle: taskProvider.taskTitle,
+            newTaskDesc: taskProvider.taskDescription,
           );
           Navigator.pop(context);
         },
