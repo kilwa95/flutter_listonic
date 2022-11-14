@@ -1,8 +1,11 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/task.dart';
+
+Uuid uuid = const Uuid();
 
 class TaskProvider extends ChangeNotifier {
   final List<Task> _tasks = <Task>[];
@@ -17,7 +20,11 @@ class TaskProvider extends ChangeNotifier {
   int get taskCount => _tasks.length;
 
   void addTask({required String newTaskTitle, String? newTaskDesc}) {
-    final Task task = Task(title: newTaskTitle, description: newTaskDesc);
+    final Task task = Task(
+      id: uuid.v1(),
+      title: newTaskTitle,
+      description: newTaskDesc,
+    );
     _tasks.add(task);
     notifyListeners();
   }
@@ -29,6 +36,17 @@ class TaskProvider extends ChangeNotifier {
 
   void setTaskDone(Task task) {
     task.toggleDone();
+    notifyListeners();
+  }
+
+  void updateTask({
+    required String id,
+    required String newTaskTitle,
+    required String newTaskDesc,
+  }) {
+    final Task taskFound = _tasks.firstWhere((Task task) => task.id == id);
+    taskFound.title = newTaskTitle;
+    taskFound.description = newTaskDesc;
     notifyListeners();
   }
 

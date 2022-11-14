@@ -1,12 +1,12 @@
 class Task {
   Task({
-    this.id,
+    required this.id,
     required this.title,
     this.description,
     this.completed = false,
   });
 
-  int? id;
+  String id;
   String title;
   String? description;
   bool completed;

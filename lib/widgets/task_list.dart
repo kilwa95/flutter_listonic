@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_listonic/screens/edit_screen.dart';
 import 'package:flutter_listonic/widgets/task_item.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,14 @@ class TasksList extends StatelessWidget {
               },
               removeTaskCallback: () {
                 taskProvider.deleteTask(task);
+              },
+              editTaskCallback: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (BuildContext context) => EditScreen(task: task),
+                  ),
+                );
               },
             );
           },
