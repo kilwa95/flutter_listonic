@@ -14,9 +14,7 @@ class TaskProvider extends ChangeNotifier {
     return UnmodifiableListView<Task>(_tasks);
   }
 
-  int get taskCount {
-    return _tasks.length;
-  }
+  int get taskCount => _tasks.length;
 
   void addTask({required String newTaskTitle, String? newTaskDesc}) {
     final Task task = Task(title: newTaskTitle, description: newTaskDesc);
