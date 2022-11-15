@@ -10,7 +10,6 @@ class TasksList extends StatelessWidget {
   const TasksList({super.key});
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Consumer<TaskProvider>(
       builder: (

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Task {
   Task({
     required this.id,
@@ -8,32 +6,11 @@ class Task {
     this.completed = false,
   });
 
-  factory Task.fromJson(Map<String, dynamic> jsonData) {
-    return Task(
-      id: jsonData['id'],
-      title: jsonData['title'],
-      description: jsonData['description'],
-      completed: jsonData['completed'],
-    );
-  }
-
-  static Map<String, dynamic> toMap(Task task) => {
-        'id': task.id,
-        'title': task.title,
-        'description': task.description,
-        'completed': task.completed,
-      };
-
-  static String encode(List<Task> musics) => json.encode(
-        musics
-            .map<Map<String, dynamic>>((Task task) => Task.toMap(task))
-            .toList(),
-      );
-
-  static List<Task> decode(String tasks) =>
-      (json.decode(tasks) as List<dynamic>)
-          .map<Task>((item) => Task.fromJson(item))
-          .toList();
+  Task.fromMap(Map<String, dynamic> map)
+      : id = map['id'],
+        title = map['title'],
+        description = map['description'],
+        completed = map['completed'];
 
   String id;
   String title;
@@ -42,5 +19,14 @@ class Task {
 
   void toggleDone() {
     completed = !completed;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'completed': completed,
+    };
   }
 }
