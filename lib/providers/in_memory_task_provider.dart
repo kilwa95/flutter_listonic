@@ -4,15 +4,19 @@ import 'package:uuid/uuid.dart';
 
 import '../models/task.dart';
 
-Uuid uuid = const Uuid();
+Uuid _uuid = const Uuid();
 
-class InMemoryProvider extends ChangeNotifier implements TaskProvider {
+class InMemoryTaskProvider extends ChangeNotifier implements TaskProvider {
   final List<Task> _tasks = <Task>[];
+
+  Task _findTaskById(String id) {
+    return _tasks.firstWhere((Task task) => task.id == id);
+  }
 
   @override
   Future<Task> createTask(String title, String description) async {
     final Task task = Task(
-      id: uuid.v1(),
+      id: _uuid.v4(),
       title: title,
       description: description,
     );
@@ -23,7 +27,7 @@ class InMemoryProvider extends ChangeNotifier implements TaskProvider {
 
   @override
   Future<Task> editTask(String id, String title, String description) async {
-    final Task taskFound = _tasks.firstWhere((Task task) => task.id == id);
+    final Task taskFound = _findTaskById(id);
     taskFound.title = title;
     taskFound.description = description;
     notifyListeners();
@@ -37,14 +41,14 @@ class InMemoryProvider extends ChangeNotifier implements TaskProvider {
 
   @override
   Future<void> deleteTask(String id) async {
-    final Task taskFound = _tasks.firstWhere((Task task) => task.id == id);
+    final Task taskFound = _findTaskById(id);
     _tasks.remove(taskFound);
     notifyListeners();
   }
 
   @override
   Future<void> toggleTaskCompletion(String id) async {
-    final Task taskFound = _tasks.firstWhere((Task task) => task.id == id);
+    final Task taskFound = _findTaskById(id);
     taskFound.toggleDone();
     notifyListeners();
   }
