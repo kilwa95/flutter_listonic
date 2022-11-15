@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_listonic/services/task_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../models/task.dart';
-import '../providers/task_provider.dart';
 import '../widgets/task_form.dart';
 
 class EditScreen extends StatelessWidget {
@@ -14,25 +14,23 @@ class EditScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('edit task'),
+        title: const Text('Edit task'),
         backgroundColor: Colors.lightBlueAccent,
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: const Text('edit'),
-        icon: const Icon(Icons.check),
-        backgroundColor: Colors.lightBlueAccent,
-        onPressed: () {
+      body: TaskForm(
+        task: task,
+        submitButtonText: "Edit",
+        onSubmit: (String title, String description) async {
           final TaskProvider taskProvider = context.read<TaskProvider>();
-          // final TaskProvider taskProvider = context.watch<TaskProvider>();
-          taskProvider.updateTask(
-            id: task.id,
-            newTaskTitle: taskProvider.taskTitle,
-            newTaskDesc: taskProvider.taskDescription,
+          final NavigatorState navigator = Navigator.of(context);
+          await taskProvider.editTask(
+            task.id,
+            title,
+            description,
           );
-          Navigator.pop(context);
+          navigator.pop();
         },
       ),
-      body: TaskForm(task: task),
     );
   }
 }

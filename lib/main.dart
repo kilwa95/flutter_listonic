@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_listonic/providers/task_provider.dart';
+import 'package:flutter_listonic/providers/in_memory_provider.dart';
 import 'package:flutter_listonic/screens/task_screen.dart';
+import 'package:flutter_listonic/services/task_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -12,9 +13,10 @@ class Listonic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TaskProvider(),
+    return ChangeNotifierProvider<TaskProvider>(
+      create: (_) => InMemoryProvider(),
       child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: TaskScreen(),
       ),
     );
