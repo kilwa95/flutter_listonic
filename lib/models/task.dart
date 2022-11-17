@@ -22,7 +22,7 @@ class Task {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'id': id,
       'title': title,
       'description': description,

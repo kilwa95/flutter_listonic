@@ -33,7 +33,7 @@ class LocalStorageTaskProvider extends ChangeNotifier implements TaskProvider {
   UnmodifiableListView<Task> get allTasks => UnmodifiableListView<Task>(_tasks);
 
   Task _findTaskById(String id) {
-    return _findTaskById(id);
+    return _tasks.firstWhere((Task task) => task.id == id);
   }
 
   T _commit<T>(T Function() transaction, {bool mustNotify = true}) {
