@@ -4,11 +4,12 @@ import 'package:flutter_listonic/models/task.dart';
 import 'package:http/http.dart' as http;
 
 const String url = 'http://10.0.2.2:3000/tasks';
+final http.Client client = http.Client();
 
 class NetworkHelper {
   Future<List<Task>> getAllTasksFromApi() async {
     try {
-      final http.Response response = await http.get(
+      final http.Response response = await client.get(
         Uri.parse(url),
       );
 
@@ -28,7 +29,7 @@ class NetworkHelper {
 
   Future<Task> createTaskFromApi(String title, String description) async {
     try {
-      final http.Response response = await http.post(
+      final http.Response response = await client.post(
         Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -54,7 +55,7 @@ class NetworkHelper {
     String description,
   ) async {
     try {
-      final http.Response response = await http.put(
+      final http.Response response = await client.put(
         Uri.parse('$url/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -76,7 +77,7 @@ class NetworkHelper {
 
   Future<void> deleteTaskFromApi(String id) async {
     try {
-      await http.delete(
+      await client.delete(
         Uri.parse('$url/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -89,7 +90,7 @@ class NetworkHelper {
 
   Future<void> toggleTaskCompletionFromApi(String id) async {
     try {
-      await http.patch(
+      await client.patch(
         Uri.parse('$url/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',

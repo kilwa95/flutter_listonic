@@ -30,12 +30,14 @@ class InMemoryTaskProvider extends ChangeNotifier implements TaskProvider {
     final Task taskFound = _findTaskById(id);
     taskFound.title = title;
     taskFound.description = description;
+    taskFound.date = DateTime.now();
     notifyListeners();
     return taskFound;
   }
 
   @override
   Future<List<Task>> getAllTasks() async {
+    _tasks.sort((Task a, Task b) => b.date.compareTo(a.date));
     return _tasks;
   }
 

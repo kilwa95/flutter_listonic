@@ -40,6 +40,7 @@ class ApiTaskProvider extends ChangeNotifier implements TaskProvider {
     final Task taskFound = _findTaskById(id);
     taskFound.title = title;
     taskFound.description = description;
+    taskFound.date = DateTime.now();
     notifyListeners();
     await networkHelper?.editTaskFromApi(id, title, description);
     return taskFound;

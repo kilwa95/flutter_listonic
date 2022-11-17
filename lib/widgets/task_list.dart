@@ -32,7 +32,15 @@ class TasksList extends StatelessWidget {
             final List<Task> tasks = snapshot.data!;
 
             return ListView.builder(
+              shrinkWrap: true,
+              itemCount: tasks.length + 1,
               itemBuilder: (BuildContext context, int index) {
+                if (index == tasks.length) {
+                  return const SizedBox(
+                    height: 100,
+                  );
+                }
+
                 final Task task = tasks[index];
                 return TaskItem(
                   task: task,
@@ -53,7 +61,6 @@ class TasksList extends StatelessWidget {
                   },
                 );
               },
-              itemCount: tasks.length,
             );
           },
         );
