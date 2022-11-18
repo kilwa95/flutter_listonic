@@ -32,7 +32,6 @@ class TasksList extends StatelessWidget {
             final List<Task> tasks = snapshot.data!;
 
             return ListView.builder(
-              shrinkWrap: true,
               itemCount: tasks.length + 1,
               itemBuilder: (BuildContext context, int index) {
                 if (index == tasks.length) {

@@ -5,20 +5,20 @@ class Task {
     this.description,
     this.completed = false,
     DateTime? date,
-  }) : date = date ?? DateTime.now();
+  }) : lastUpdated = date ?? DateTime.now();
 
   Task.fromMap(Map<String, dynamic> map)
       : id = map['id'],
         title = map['title'],
         description = map['description'],
         completed = map['completed'],
-        date = map['date'];
+        lastUpdated = DateTime.parse(map['lastUpdated']);
 
   String id;
   String title;
   String? description;
   bool completed;
-  DateTime date;
+  DateTime lastUpdated;
 
   void toggleDone() {
     completed = !completed;
@@ -30,6 +30,7 @@ class Task {
       'title': title,
       'description': description,
       'completed': completed,
+      'lastUpdated': lastUpdated,
     };
   }
 }

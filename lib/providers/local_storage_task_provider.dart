@@ -99,14 +99,14 @@ class LocalStorageTaskProvider extends ChangeNotifier implements TaskProvider {
       final Task taskFound = _findTaskById(id);
       taskFound.title = title;
       taskFound.description = description;
-      taskFound.date = DateTime.now();
+      taskFound.lastUpdated = DateTime.now();
       return taskFound;
     });
   }
 
   @override
   Future<List<Task>> getAllTasks() async {
-    allTasks.sort((Task a, Task b) => b.date.compareTo(a.date));
+    allTasks.sort((Task a, Task b) => b.lastUpdated.compareTo(a.lastUpdated));
     return allTasks;
   }
 

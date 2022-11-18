@@ -38,7 +38,7 @@ class NetworkHelper {
           <String, String>{'title': title, 'description': description},
         ),
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         final dynamic data = jsonDecode(response.body);
         return Task.fromMap(data);
       } else {

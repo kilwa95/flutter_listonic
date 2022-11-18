@@ -18,24 +18,28 @@ class TaskItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        onLongPress: editTaskCallback,
-        leading: Checkbox(
-          value: task.completed,
-          onChanged: checkboxCallback,
-        ),
-        title: Text(
-          task.title,
-          style: TextStyle(
-            decoration: task.completed ? TextDecoration.lineThrough : null,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Card(
+        elevation: 3.0,
+        child: ListTile(
+          onLongPress: editTaskCallback,
+          leading: Checkbox(
+            value: task.completed,
+            onChanged: checkboxCallback,
           ),
-        ),
-        trailing: GestureDetector(
-          onTap: removeTaskCallback,
-          child: const Icon(
-            Icons.close,
-            color: Colors.red,
+          title: Text(
+            task.title,
+            style: TextStyle(
+              decoration: task.completed ? TextDecoration.lineThrough : null,
+            ),
+          ),
+          trailing: GestureDetector(
+            onTap: removeTaskCallback,
+            child: const Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
           ),
         ),
       ),
