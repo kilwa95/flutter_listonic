@@ -3,10 +3,17 @@ import 'package:flutter_listonic/models/task.dart';
 import 'package:uuid/uuid.dart';
 
 import '../interfaces/task_provider.dart';
-import '../services/network_helper.dart';
+import '../services/tasks/task_delete_service.dart';
+import '../services/tasks/task_fetch_service.dart';
+import '../services/tasks/task_save_service.dart';
+import '../services/tasks/task_update_service.dart';
 
 class ApiTaskProvider extends ChangeNotifier implements TaskProvider {
-  NetworkHelper? networkHelper = NetworkHelper();
+  final TaskFetchService _taskFetchService = TaskFetchService();
+  final TaskSaveService _taskSaveService = TaskSaveService();
+  final TaskUpdateService _taskUpdateService = TaskUpdateService();
+  final TaskDeleteService _taskDeleteService = TaskDeleteService();
+
   List<Task> _tasks = <Task>[];
   final Uuid _uuid = const Uuid();
 
@@ -23,7 +30,7 @@ class ApiTaskProvider extends ChangeNotifier implements TaskProvider {
     );
     _tasks.add(task);
     notifyListeners();
-    await networkHelper?.createTaskFromApi(title, description);
+    await _taskSaveService.createTaskFromApi(title, description);
     return task;
   }
 
@@ -32,7 +39,7 @@ class ApiTaskProvider extends ChangeNotifier implements TaskProvider {
     final Task taskFound = _findTaskById(id);
     _tasks.remove(taskFound);
     notifyListeners();
-    await networkHelper?.deleteTaskFromApi(id);
+    await _taskDeleteService.deleteTaskFromApi(id);
   }
 
   @override
@@ -42,20 +49,21 @@ class ApiTaskProvider extends ChangeNotifier implements TaskProvider {
     taskFound.description = description;
     taskFound.lastUpdated = DateTime.now();
     notifyListeners();
-    await networkHelper?.editTaskFromApi(id, title, description);
+    await _taskUpdateService.editTaskFromApi(id, title, description);
     return taskFound;
   }
 
   @override
   Future<List<Task>> getAllTasks() async {
-    return _tasks = await networkHelper?.getAllTasksFromApi() as List<Task>;
+    _tasks = await _taskFetchService.getAllTasksFromApi();
+    return _tasks;
   }
 
   @override
   Future<void> toggleTaskCompletion(String id) async {
     final Task taskFound = _findTaskById(id);
     taskFound.toggleDone();
-    await networkHelper?.toggleTaskCompletionFromApi(id);
+    await _taskUpdateService.toggleTaskCompletionFromApi(id);
     notifyListeners();
   }
 }

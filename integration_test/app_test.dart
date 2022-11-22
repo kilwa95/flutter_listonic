@@ -7,7 +7,7 @@ void main() {
   group('App Test', () {
     IntegrationTestWidgetsFlutterBinding.ensureInitialized();
     testWidgets("full app test", (WidgetTester tester) async {
-      app.main();
+      await app.main();
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(Icons.add));
       await tester.pumpAndSettle(

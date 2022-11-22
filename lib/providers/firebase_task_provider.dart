@@ -1,11 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_listonic/services/tasks/task_delete_service.dart';
+import 'package:flutter_listonic/services/tasks/task_save_service.dart';
+import 'package:flutter_listonic/services/tasks/task_update_service.dart';
 
 import '../interfaces/task_provider.dart';
 import '../models/task.dart';
+import '../services/tasks/task_fetch_service.dart';
 
 class FirebaseTaskProvider extends ChangeNotifier implements TaskProvider {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final TaskFetchService _taskFetchService = TaskFetchService();
+  final TaskSaveService _taskSaveService = TaskSaveService();
+  final TaskUpdateService _taskUpdateService = TaskUpdateService();
+  final TaskDeleteService _taskDeleteService = TaskDeleteService();
   List<Task> _tasks = <Task>[];
 
   Task _findTaskById(String id) {
@@ -14,15 +20,12 @@ class FirebaseTaskProvider extends ChangeNotifier implements TaskProvider {
 
   @override
   Future<Task> createTask(String title, String description) async {
-    final DocumentReference<Map<String, dynamic>> doc =
-        await _firestore.collection('tasks').add(<String, dynamic>{
-      'title': title,
-      'description': description,
-      'completed': false,
-      'lastUpdated': DateTime.now(),
-    });
+    final String id = await _taskSaveService.createTaskFromFirebase(
+      title,
+      description,
+    );
     final Task task = Task(
-      id: doc.id,
+      id: id,
       title: title,
       description: description,
     );
@@ -36,7 +39,7 @@ class FirebaseTaskProvider extends ChangeNotifier implements TaskProvider {
     final Task taskFound = _findTaskById(id);
     _tasks.remove(taskFound);
     notifyListeners();
-    await _firestore.collection('tasks').doc(id).delete();
+    await _taskDeleteService.deleteTaskFromFirebase(id);
   }
 
   @override
@@ -46,29 +49,19 @@ class FirebaseTaskProvider extends ChangeNotifier implements TaskProvider {
     taskFound.description = description;
     taskFound.lastUpdated = DateTime.now();
     notifyListeners();
-    await _firestore.collection('tasks').doc(id).update(<String, dynamic>{
-      'title': title,
-      'description': description,
-      'lastUpdated': DateTime.now(),
-    });
+    await _taskUpdateService.editTaskFromFirebase(
+      id,
+      title,
+      description,
+    );
     return taskFound;
   }
 
   @override
   Future<List<Task>> getAllTasks() async {
-    final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await _firestore.collection('tasks').get();
-    final List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
-        querySnapshot.docs;
-    _tasks = docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-      final Map<String, dynamic> data = doc.data();
-      return Task(
-        id: doc.id,
-        title: data['title'],
-        description: data['description'],
-        completed: data['completed'],
-      );
-    }).toList();
+    if (_tasks.isEmpty) {
+      _tasks = await _taskFetchService.getAllTasksFromFirebase();
+    }
     return _tasks;
   }
 
@@ -77,8 +70,6 @@ class FirebaseTaskProvider extends ChangeNotifier implements TaskProvider {
     final Task taskFound = _findTaskById(id);
     taskFound.toggleDone();
     notifyListeners();
-    await _firestore.collection('tasks').doc(id).update(<String, dynamic>{
-      'completed': taskFound.completed,
-    });
+    await _taskUpdateService.toggleTaskCompletionFromFirebase(id);
   }
 }
