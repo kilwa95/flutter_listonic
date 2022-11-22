@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_listonic/interfaces/task_provider.dart';
 import 'package:flutter_listonic/screens/edit_screen.dart';
-import 'package:flutter_listonic/services/task_provider.dart';
 import 'package:flutter_listonic/widgets/task_item.dart';
 import 'package:provider/provider.dart';
 

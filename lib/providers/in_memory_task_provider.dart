@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_listonic/services/task_provider.dart';
+import 'package:flutter_listonic/interfaces/task_provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/task.dart';
