@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_listonic/models/task.dart';
 import 'package:uuid/uuid.dart';
 
+import '../interfaces/task_provider.dart';
 import '../services/network_helper.dart';
-import '../services/task_provider.dart';
 
 class ApiTaskProvider extends ChangeNotifier implements TaskProvider {
   NetworkHelper? networkHelper = NetworkHelper();
