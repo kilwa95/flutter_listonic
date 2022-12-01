@@ -16,12 +16,7 @@ class TaskScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.lightBlueAccent,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => const AddScreen(),
-            ),
-          );
+          Navigator.of(context).pushNamed(AddScreen.routeName);
         },
         child: const Icon(Icons.add),
       ),

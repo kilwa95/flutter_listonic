@@ -7,6 +7,8 @@ import '../widgets/task_form.dart';
 class AddScreen extends StatelessWidget {
   const AddScreen({super.key});
 
+  static const String routeName = '/add-task';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

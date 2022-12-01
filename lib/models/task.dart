@@ -1,3 +1,5 @@
+//TODO: utliserr la lib json_seralizer
+
 class Task {
   Task({
     required this.id,

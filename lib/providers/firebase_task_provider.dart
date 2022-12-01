@@ -1,75 +1,54 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_listonic/services/tasks/task_delete_service.dart';
-import 'package:flutter_listonic/services/tasks/task_save_service.dart';
-import 'package:flutter_listonic/services/tasks/task_update_service.dart';
+import 'package:flutter_listonic/services/tasks/task_firebase_service.dart';
 
 import '../interfaces/task_provider.dart';
 import '../models/task.dart';
-import '../services/tasks/task_fetch_service.dart';
 
-class FirebaseTaskProvider extends ChangeNotifier implements TaskProvider {
-  final TaskFetchService _taskFetchService = TaskFetchService();
-  final TaskSaveService _taskSaveService = TaskSaveService();
-  final TaskUpdateService _taskUpdateService = TaskUpdateService();
-  final TaskDeleteService _taskDeleteService = TaskDeleteService();
-  List<Task> _tasks = <Task>[];
+class FirebaseTaskProvider extends TaskProvider {
+  final TaskFireBaseService _taskFireBaseService = TaskFireBaseService();
 
-  Task _findTaskById(String id) {
-    return _tasks.firstWhere((Task task) => task.id == id);
+  @override
+  Future<List<Task>> getAllTasks() async {
+    final List<Task> tasks = await super.getAllTasks();
+    final List<Task> firebaseTasks =
+        await _taskFireBaseService.getAllTasksFromFirebase();
+    if (tasks.isEmpty) {
+      tasks.addAll(firebaseTasks);
+    }
+    return tasks;
   }
 
   @override
-  Future<Task> createTask(String title, String description) async {
-    final String id = await _taskSaveService.createTaskFromFirebase(
+  Future<void> createTask(
+    String title,
+    String description, {
+    String? id,
+  }) async {
+    final String id = await _taskFireBaseService.createTaskFromFirebase(
       title,
       description,
     );
-    final Task task = Task(
-      id: id,
-      title: title,
-      description: description,
-    );
-    _tasks.add(task);
-    notifyListeners();
-    return task;
+    await super.createTask(title, description, id: id);
   }
 
   @override
   Future<void> deleteTask(String id) async {
-    final Task taskFound = _findTaskById(id);
-    _tasks.remove(taskFound);
-    notifyListeners();
-    await _taskDeleteService.deleteTaskFromFirebase(id);
+    await super.deleteTask(id);
+    await _taskFireBaseService.deleteTaskFromFirebase(id);
   }
 
   @override
-  Future<Task> editTask(String id, String title, String description) async {
-    final Task taskFound = _findTaskById(id);
-    taskFound.title = title;
-    taskFound.description = description;
-    taskFound.lastUpdated = DateTime.now();
-    notifyListeners();
-    await _taskUpdateService.editTaskFromFirebase(
+  Future<void> editTask(String id, String title, String description) async {
+    await _taskFireBaseService.editTaskFromFirebase(
       id,
       title,
       description,
     );
-    return taskFound;
-  }
-
-  @override
-  Future<List<Task>> getAllTasks() async {
-    if (_tasks.isEmpty) {
-      _tasks = await _taskFetchService.getAllTasksFromFirebase();
-    }
-    return _tasks;
+    await super.editTask(id, title, description);
   }
 
   @override
   Future<void> toggleTaskCompletion(String id) async {
-    final Task taskFound = _findTaskById(id);
-    taskFound.toggleDone();
-    notifyListeners();
-    await _taskUpdateService.toggleTaskCompletionFromFirebase(id);
+    await super.toggleTaskCompletion(id);
+    await _taskFireBaseService.toggleTaskCompletionFromFirebase(id);
   }
 }

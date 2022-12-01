@@ -43,11 +43,11 @@ class TasksList extends StatelessWidget {
                 final Task task = tasks[index];
                 return TaskItem(
                   task: task,
-                  checkboxCallback: (_) async {
-                    await taskProvider.toggleTaskCompletion(task.id);
+                  checkboxCallback: (_) {
+                    taskProvider.toggleTaskCompletion(task.id);
                   },
-                  removeTaskCallback: () async {
-                    await taskProvider.deleteTask(task.id);
+                  removeTaskCallback: () {
+                    taskProvider.deleteTask(task.id);
                   },
                   editTaskCallback: () {
                     Navigator.push(
